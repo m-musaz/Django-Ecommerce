@@ -13,6 +13,7 @@ class Promotion(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField(default='-')
     description = models.TextField()
     price = models.DecimalField(max_digits=6,decimal_places=2)
     inventory = models.IntegerField()
@@ -33,6 +34,12 @@ class Customer(models.Model):
     birth_date = models.DateField(null=True)
 
     membership = models.CharField(max_length=1,choices=MEMBERSHIP_VALUES,default='B')
+
+    class Meta:
+        db_table = 'store_customers'
+        indexes = [
+            models.Index(fields=['first_name','last_name'])
+        ]
 
 class Order(models.Model):
     PAYMENT_STATUS_VALUES=[
@@ -65,3 +72,4 @@ class Address(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     Customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
+    zip = models.CharField(max_length=255,default='-')
