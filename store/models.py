@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Collection(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,null=True)
     featured_product = models.ForeignKey('Product',on_delete=models.SET_NULL,null=True,related_name='+')
 
 class Promotion(models.Model):
@@ -12,14 +12,15 @@ class Promotion(models.Model):
     discount = models.FloatField()
 
 class Product(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,null=True)
     slug = models.SlugField(default='-')
     description = models.TextField()
-    price = models.DecimalField(max_digits=6,decimal_places=2)
+    price = models.DecimalField(max_digits=6,decimal_places=2,null=True)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection,on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2,null=True)
 
 class Customer(models.Model):
     MEMBERSHIP_VALUES=[
@@ -56,11 +57,11 @@ class Cart(models.Model):
     
 
 class OrderItem(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,null=True)
     order = models.ForeignKey(Order,on_delete=models.PROTECT)
     product = models.ForeignKey(Product,on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField()
-    unit_price = models.DecimalField(max_digits=6,decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6,decimal_places=2,null=True)
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
